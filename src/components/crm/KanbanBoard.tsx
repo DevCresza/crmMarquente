@@ -1,5 +1,5 @@
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
-import { Eye, Trash2, Mail, Phone, MapPin } from 'lucide-react';
+import { Eye, Trash2, Mail, Phone, MapPin, Calendar } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -90,7 +90,7 @@ export function KanbanBoard({
                               <div className="space-y-2">
                                 <div>
                                   <h3 className="font-semibold text-sm line-clamp-1">
-                                    {registration.razao_social}
+                                    {registration.razao_social || registration.contact_name}
                                   </h3>
                                   <p className="text-xs text-muted-foreground mt-1">
                                     {registration.contact_name}
@@ -114,6 +114,12 @@ export function KanbanBoard({
                                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                       <MapPin className="h-3 w-3" />
                                       <span>{registration.cidade}, {registration.uf}</span>
+                                    </div>
+                                  )}
+                                  {registration.created_at && (
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                      <Calendar className="h-3 w-3" />
+                                      <span>{new Date(registration.created_at).toLocaleDateString('pt-BR')}</span>
                                     </div>
                                   )}
                                 </div>
@@ -159,3 +165,4 @@ export function KanbanBoard({
     </DragDropContext>
   );
 }
+

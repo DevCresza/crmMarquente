@@ -84,9 +84,9 @@ export function CRM() {
 
   const filteredRegistrations = registrations.filter((reg) => {
     const matchesSearch =
-      reg.razao_social.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      reg.contact_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      reg.email.toLowerCase().includes(searchQuery.toLowerCase());
+      (reg.razao_social || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (reg.contact_name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (reg.email || "").toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || reg.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -223,13 +223,14 @@ export function CRM() {
                     <TableHead>Tipo</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Cidade</TableHead>
+                    <TableHead>Data</TableHead>
                     <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredRegistrations.map((reg) => (
                     <TableRow key={reg.id}>
-                      <TableCell className="font-medium">{reg.razao_social}</TableCell>
+                      <TableCell className="font-medium">{reg.razao_social || reg.contact_name}</TableCell>
                       <TableCell>
                         <div className="space-y-1">
                           <div className="text-sm">{reg.contact_name}</div>
@@ -252,6 +253,9 @@ export function CRM() {
                       <TableCell>{getStatusBadge(reg.status)}</TableCell>
                       <TableCell>
                         {reg.cidade}, {reg.uf}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {reg.created_at ? new Date(reg.created_at).toLocaleDateString('pt-BR') : '-'}
                       </TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
@@ -304,7 +308,7 @@ export function CRM() {
                 <div>
                   <label className="text-sm font-medium">Razão Social</label>
                   <p className="text-sm text-muted-foreground">
-                    {selectedRegistration.razao_social}
+                    {selectedRegistration.razao_social || selectedRegistration.contact_name}
                   </p>
                 </div>
                 <div>
@@ -360,6 +364,14 @@ export function CRM() {
                 <div>
                   <label className="text-sm font-medium">Status</label>
                   <div className="mt-1">{getStatusBadge(selectedRegistration.status)}</div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Data de Cadastro</label>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedRegistration.created_at
+                      ? new Date(selectedRegistration.created_at).toLocaleString('pt-BR')
+                      : '-'}
+                  </p>
                 </div>
               </div>
 
@@ -420,3 +432,4 @@ export function CRM() {
     </div>
   );
 }
+
